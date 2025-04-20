@@ -1,5 +1,11 @@
 // import note data
-import { notesData } from "./script/data/local/notes-data.js";
+import './styles/style.css';
+import './script/components/header.js';
+import './script/components/footer.js';
+import './script/components/note-card.js';
+import './script/components/note-modal.js';
+import { notesData } from './script/data/local/notes-data.js';
+// import { loadNotes, saveNotes } from './script/data/local/notes-data.js';
 
 // load notes from localStorage
 function loadNotes() {

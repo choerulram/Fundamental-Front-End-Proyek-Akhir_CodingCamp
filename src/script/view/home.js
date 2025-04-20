@@ -1,5 +1,5 @@
 // import note data
-import { notesData } from '../data/local/notes-data.js';
+import { loadNotes, renderNotes } from './data/local/notes-data.js';
 
 // get elements
 const notesListElement = document.querySelector('#notesList');
@@ -41,4 +41,5 @@ function renderNotes(notes) {
   });
 }
 
-renderNotes(notesData); // initial render
+const notes = loadNotes();
+renderNotes(notes); // initial render
