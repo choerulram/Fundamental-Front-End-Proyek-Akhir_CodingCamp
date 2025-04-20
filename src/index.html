@@ -1,37 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes App - Achmad Choerul Ramdahni</title>
-    <link rel="icon" href="note_icon.ico" type="image/icon type">
-</head>
-<body>
+    <link rel="icon" href="note_icon.ico" type="image/icon type" />
+  </head>
+  <body>
     <!-- start header -->
     <app-header></app-header>
     <!-- end header -->
-    
+
     <!-- start main -->
     <main>
-        <!-- start list note -->
-        <section class="notes_body">
-            <form id="searchNote">
-                <div class="search">
-                    <label class="label_search" for="searchNoteTitle">Judul : </label>
-                    <input id="searchNoteTitle" type="text" placeholder="Cari berdasarkan judul ..." />
-                    <button id="searchSubmit" class="search-button" type="submit">Cari</button>
-                    <button id="addNoteButton" class="btn add-note-button" type="button">Add Note</button>
-                </div>
-            </form>
-            <div id="notesList" class="list"></div>
-        </section>
-        <note-modal id="modal"></note-modal> 
-        <!-- end list note -->
+      <!-- start list note -->
+      <section class="notes_body">
+        <!-- start card header -->
+        <card-header></card-header>
+        <!-- end card-header     -->
+
+        <div class="button-container">
+          <button id="addNoteButton" class="btn add-note-button" type="button">
+            Add Note
+          </button>
+        </div>
+
+        <!-- start notelist -->
+        <div id="notesList" class="list"></div>
+        <!-- end notelist -->
+      </section>
+
+      <!-- start modal -->
+      <note-modal id="modal"></note-modal>
+      <note-detail-modal id="detailModal"></note-detail-modal>
+      <!-- end modal -->
+
+      <!-- end list note -->
     </main>
     <!-- end main -->
 
     <!-- start foote -->
     <app-footer></app-footer>
     <!-- end footer -->
-</body>
+  </body>
 </html>

@@ -1,9 +1,9 @@
 // custom element Footer
 class AppFooter extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = `
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `
             <style>
                 footer {
                     text-align: center;
@@ -19,7 +19,7 @@ class AppFooter extends HTMLElement {
                 <p>Created by <span><b>Achmad Choerul Ramdhani</b></span> in Program <span class="coding-camp"><b>Coding Camp Powered by DSS Foundation</b></span></p>
             </footer>
         `;
-    }
+  }
 }
 
-customElements.define('app-footer', AppFooter);
+customElements.define("app-footer", AppFooter);

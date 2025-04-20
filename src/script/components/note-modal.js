@@ -1,10 +1,10 @@
 // custom element NoteModal
 class NoteModal extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        try {
-            this.shadowRoot.innerHTML = `
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    try {
+      this.shadowRoot.innerHTML = `
                 <style>
                 /* h2 style */
                 h2 {
@@ -150,91 +150,100 @@ class NoteModal extends HTMLElement {
                     </div>
                 </div>
             `;
-    
-            // get elemen from shadow DOM
-            this.closeButton = this.shadowRoot.querySelector(".close");
-            this.form = this.shadowRoot.querySelector("#noteForm");
-            this.titleInput = this.shadowRoot.querySelector('input[name="title"]');
-            this.bodyInput = this.shadowRoot.querySelector('textarea[name="body"]');
-            this.titleFeedback = this.shadowRoot.querySelector("#titleFeedback");
-            this.bodyFeedback = this.shadowRoot.querySelector("#bodyFeedback");
-    
-            // event listener close button
-            this.closeButton.onclick = () => this.hide();
-    
-            // add event listener validasi real-time
-            this.titleInput.addEventListener("input", () => this.validateTitle());
-            this.bodyInput.addEventListener("input", () => this.validateBody());
-    
-            // atur pengiriman form
-            this.form.onsubmit = (event) => {
-                event.preventDefault();
-                const title = this.titleInput.value;
-                const body = this.bodyInput.value;
-    
-                // validasi pengiriman
-                const titleLength = title.length;
-                const bodyLength = body.length;
-    
-                if (titleLength < 5 || titleLength > 50 || bodyLength < 10 || bodyLength > 200) {
-                    this.validateTitle();
-                    this.validateBody();
-                    this.setAttribute('data-valid', 'false');
-                    return;
-                }
-    
-                this.setAttribute("data-valid", "true");
-                this.dispatchEvent(new CustomEvent("save-note", { detail: { title, body } }));
-                this.hide();
-            };
-        } catch (error) {
-            console.error("Error loading template:", error);
-        }
-    }
 
-    validateTitle() {
-        const titleLength = this.titleInput.value.length;
-        if (titleLength < 5) {
-            this.titleFeedback.innerHTML = "&#9888; Judul harus minimal 5 karakter.";
-            this.titleFeedback.style.display = "block";
-        } else if (titleLength > 50) {
-            this.titleFeedback.innerHTML = "&#9888; Judul tidak boleh lebih dari 50 karakter.";
-            this.titleFeedback.style.display = "block";
-        } else {
-            this.titleFeedback.textContent = "";
-            this.titleFeedback.style.display = "none";
-        }
-    }
+      // get elemen from shadow DOM
+      this.closeButton = this.shadowRoot.querySelector(".close");
+      this.form = this.shadowRoot.querySelector("#noteForm");
+      this.titleInput = this.shadowRoot.querySelector('input[name="title"]');
+      this.bodyInput = this.shadowRoot.querySelector('textarea[name="body"]');
+      this.titleFeedback = this.shadowRoot.querySelector("#titleFeedback");
+      this.bodyFeedback = this.shadowRoot.querySelector("#bodyFeedback");
 
-    validateBody() {
-        const bodyLength = this.bodyInput.value.length;
-        if (bodyLength < 10) {
-            this.bodyFeedback.innerHTML = "&#9888; Body harus minimal 10 karakter.";
-            this.bodyFeedback.style.display = "block";
-        } else if (bodyLength > 200) {
-            this.bodyFeedback.innerHTML = "&#9888; Body tidak boleh lebih dari 200 karakter.";
-            this.bodyFeedback.style.display = "block";
-        } else {
-            this.bodyFeedback.textContent = "";
-            this.bodyFeedback.style.display = "none";
-        }
-    }
+      // event listener close button
+      this.closeButton.onclick = () => this.hide();
 
-    show() {
-        this.style.display = "block"; 
-        const modal = this.shadowRoot.querySelector(".modal");
-        if (modal) {
-            modal.style.display = "block";
-        }
-    }
+      // add event listener validasi real-time
+      this.titleInput.addEventListener("input", () => this.validateTitle());
+      this.bodyInput.addEventListener("input", () => this.validateBody());
 
-    hide() {
-        this.style.display = "none";
-        const modal = this.shadowRoot.querySelector(".modal");
-        if (modal) {
-            modal.style.display = "none";
+      // atur pengiriman form
+      this.form.onsubmit = (event) => {
+        event.preventDefault();
+        const title = this.titleInput.value;
+        const body = this.bodyInput.value;
+
+        // validasi pengiriman
+        const titleLength = title.length;
+        const bodyLength = body.length;
+
+        if (
+          titleLength < 5 ||
+          titleLength > 50 ||
+          bodyLength < 10 ||
+          bodyLength > 200
+        ) {
+          this.validateTitle();
+          this.validateBody();
+          this.setAttribute("data-valid", "false");
+          return;
         }
+
+        this.setAttribute("data-valid", "true");
+        this.dispatchEvent(
+          new CustomEvent("save-note", { detail: { title, body } }),
+        );
+        this.hide();
+      };
+    } catch (error) {
+      console.error("Error loading template:", error);
     }
+  }
+
+  validateTitle() {
+    const titleLength = this.titleInput.value.length;
+    if (titleLength < 5) {
+      this.titleFeedback.innerHTML = "&#9888; Judul harus minimal 5 karakter.";
+      this.titleFeedback.style.display = "block";
+    } else if (titleLength > 50) {
+      this.titleFeedback.innerHTML =
+        "&#9888; Judul tidak boleh lebih dari 50 karakter.";
+      this.titleFeedback.style.display = "block";
+    } else {
+      this.titleFeedback.textContent = "";
+      this.titleFeedback.style.display = "none";
+    }
+  }
+
+  validateBody() {
+    const bodyLength = this.bodyInput.value.length;
+    if (bodyLength < 10) {
+      this.bodyFeedback.innerHTML = "&#9888; Body harus minimal 10 karakter.";
+      this.bodyFeedback.style.display = "block";
+    } else if (bodyLength > 200) {
+      this.bodyFeedback.innerHTML =
+        "&#9888; Body tidak boleh lebih dari 200 karakter.";
+      this.bodyFeedback.style.display = "block";
+    } else {
+      this.bodyFeedback.textContent = "";
+      this.bodyFeedback.style.display = "none";
+    }
+  }
+
+  show() {
+    this.style.display = "block";
+    const modal = this.shadowRoot.querySelector(".modal");
+    if (modal) {
+      modal.style.display = "block";
+    }
+  }
+
+  hide() {
+    this.style.display = "none";
+    const modal = this.shadowRoot.querySelector(".modal");
+    if (modal) {
+      modal.style.display = "none";
+    }
+  }
 }
 
 customElements.define("note-modal", NoteModal);

@@ -1,9 +1,9 @@
 // custom element Header
 class AppHeader extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = `
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = `
             <style>
                 .navbar {
                     background: rgb(9, 202, 48);
@@ -21,7 +21,7 @@ class AppHeader extends HTMLElement {
                 <h1>Notes App</h1>
             </nav>
         `;
-    }
+  }
 }
 
-customElements.define('app-header', AppHeader);
+customElements.define("app-header", AppHeader);
