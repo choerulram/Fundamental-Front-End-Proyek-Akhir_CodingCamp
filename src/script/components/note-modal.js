@@ -2,24 +2,10 @@
 class NoteModal extends HTMLElement {
     constructor() {
         super();
-    }
-
-    async connectedCallback() {
+        this.attachShadow({ mode: 'open' });
         try {
-            // get template from template.html
-            const response = await fetch("./script/components/templates.html");
-            const text = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(text, "text/html");
-            const template = doc.getElementById("modal-template").content;
-
-            // shadow DOM (encapsulasi)
-            const shadow = this.attachShadow({ mode: "open" });
-            shadow.appendChild(template.cloneNode(true));
-
-            // add style css
-            const style = document.createElement("style");
-            style.textContent = `
+            this.shadowRoot.innerHTML = `
+                <style>
                 /* h2 style */
                 h2 {
                     width: 100%;
@@ -142,59 +128,63 @@ class NoteModal extends HTMLElement {
                     100% { transform: translate(0); }
                 }
                 /* end modal style */
-                `;
-            shadow.appendChild(style);
+                </style>
 
-            // get elemnt from shadow
-            this.closeButton = shadow.querySelector(".close");
-            this.form = shadow.querySelector("#noteForm");
-            this.titleInput = shadow.querySelector('input[name="title"]');
-            this.bodyInput = shadow.querySelector('textarea[name="body"]');
-            this.titleFeedback = shadow.querySelector("#titleFeedback");
-            this.bodyFeedback = shadow.querySelector("#bodyFeedback");
-
-            // debugging
-            // console.log(
-            //     this.titleInput,
-            //     this.bodyInput,
-            //     this.titleFeedback,
-            //     this.bodyFeedback
-            // );
-
-            // start validasi real-time
-            this.titleInput.addEventListener("input", () => {
-                console.log("Event listener untuk judul dipanggil");
-                this.validateTitle();
-            });
-            this.bodyInput.addEventListener("input", () => {
-                console.log("Event listener untuk body dipanggil");
-                this.validateBody();
-            });
-
-            this.closeButton.onclick = () => this.hide(); // close button saat diklik
+                <div class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Add Note</h2>
+                        <form id="noteForm">
+                            <div class="input">
+                                <label>Judul</label>
+                                <input type="text" name="title" required placeholder="Tuliskan judul catatan ..." />
+                                <span id="titleFeedback" class="feedback"></span>
+                            </div>
+                            <div class="input">
+                                <label>Body</label>
+                                <textarea name="body" placeholder="Tuliskan isi catatan ..." required></textarea>
+                                <span id="bodyFeedback" class="feedback"></span>
+                            </div>
+                            <button class="submit_note" type="submit">Save Note</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+    
+            // get elemen from shadow DOM
+            this.closeButton = this.shadowRoot.querySelector(".close");
+            this.form = this.shadowRoot.querySelector("#noteForm");
+            this.titleInput = this.shadowRoot.querySelector('input[name="title"]');
+            this.bodyInput = this.shadowRoot.querySelector('textarea[name="body"]');
+            this.titleFeedback = this.shadowRoot.querySelector("#titleFeedback");
+            this.bodyFeedback = this.shadowRoot.querySelector("#bodyFeedback");
+    
+            // event listener close button
+            this.closeButton.onclick = () => this.hide();
+    
+            // add event listener validasi real-time
+            this.titleInput.addEventListener("input", () => this.validateTitle());
+            this.bodyInput.addEventListener("input", () => this.validateBody());
+    
             // atur pengiriman form
             this.form.onsubmit = (event) => {
                 event.preventDefault();
                 const title = this.titleInput.value;
                 const body = this.bodyInput.value;
-
+    
                 // validasi pengiriman
                 const titleLength = title.length;
                 const bodyLength = body.length;
-
-                // cek realtime validate (jika tervalidate maka tdk bisa submit)
+    
                 if (titleLength < 5 || titleLength > 50 || bodyLength < 10 || bodyLength > 200) {
                     this.validateTitle();
                     this.validateBody();
                     this.setAttribute('data-valid', 'false');
                     return;
                 }
-
-                // submit data form
+    
                 this.setAttribute("data-valid", "true");
-                this.dispatchEvent(
-                    new CustomEvent("save-note", { detail: { title, body } })
-                );
+                this.dispatchEvent(new CustomEvent("save-note", { detail: { title, body } }));
                 this.hide();
             };
         } catch (error) {
@@ -202,7 +192,6 @@ class NoteModal extends HTMLElement {
         }
     }
 
-    // realtime validate tittle
     validateTitle() {
         const titleLength = this.titleInput.value.length;
         if (titleLength < 5) {
@@ -217,7 +206,6 @@ class NoteModal extends HTMLElement {
         }
     }
 
-    // realtime validate body
     validateBody() {
         const bodyLength = this.bodyInput.value.length;
         if (bodyLength < 10) {
@@ -232,25 +220,19 @@ class NoteModal extends HTMLElement {
         }
     }
 
-    // show modal
     show() {
         this.style.display = "block"; 
         const modal = this.shadowRoot.querySelector(".modal");
         if (modal) {
             modal.style.display = "block";
-        } else {
-            console.error("Elemen .modal tidak ditemukan di dalam shadowRoot");
         }
     }
 
-    // hide modal
     hide() {
         this.style.display = "none";
         const modal = this.shadowRoot.querySelector(".modal");
         if (modal) {
             modal.style.display = "none";
-        } else {
-            console.error("Elemen .modal tidak ditemukan di dalam shadowRoot");
         }
     }
 }

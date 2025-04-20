@@ -28,7 +28,7 @@ function renderNotes(notes) {
     });
 }
 
-// create note item elemtn
+// create note item element
 function createNoteItemElement({ id, title, body, createdAt, archived }) {
     // create container for note
     const container = document.createElement("div");
@@ -47,11 +47,11 @@ function createNoteItemElement({ id, title, body, createdAt, archived }) {
     const createdAtElement = document.createElement("small");
     createdAtElement.textContent = `Created at: ${new Date(createdAt).toLocaleString()}`;
 
-    // create aechived
+    // create archived
     const archivedElement = document.createElement("p");
     archivedElement.textContent = `Archived: ${archived ? "Yes" : "No"}`;
 
-    // create edite button
+    // create edit button
     const editButton = document.createElement("button");
     editButton.textContent = "Edit Note";
     editButton.classList.add("edit-button");
@@ -61,9 +61,9 @@ function createNoteItemElement({ id, title, body, createdAt, archived }) {
             modal.shadowRoot.querySelector('input[name="title"]').value = noteToEdit.title;
             modal.shadowRoot.querySelector('textarea[name="body"]').value = noteToEdit.body;
             modal.show();
-            notes.splice(notes.indexOf(noteToEdit), 1);
-            saveNotes(notes);
-            renderNotes(notes);
+
+            // Simpan ID catatan yang sedang diedit
+            modal.setAttribute('data-edit-id', id);
         }
     });
 
@@ -113,18 +113,30 @@ addNoteButton.addEventListener("click", () => {
 modal.addEventListener('save-note', (event) => {
     if (modal.getAttribute('data-valid') === 'true') {
         const { title, body } = event.detail;
-        const newNote = {
-            id: `notes-${Date.now()}`,
-            title,
-            body,
-            createdAt: new Date().toISOString(),
-            archived: false,
-        };
+        const editId = modal.getAttribute('data-edit-id');
 
-        notes.push(newNote);
+        if (editId) {
+            // update existing note
+            const noteToUpdate = notes.find(note => note.id === editId);
+            if (noteToUpdate) {
+                noteToUpdate.title = title;
+                noteToUpdate.body = body;
+            }
+        } else {
+            // create new note
+            const newNote = {
+                id: `notes-${Date.now()}`,
+                title,
+                body,
+                createdAt: new Date().toISOString(),
+                archived: false,
+            };
+            notes.push(newNote);
+        }
+
         saveNotes(notes);
-
         renderNotes(notes);
+        modal.removeAttribute('data-edit-id');
     }
 });
 
