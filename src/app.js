@@ -383,22 +383,3 @@ modal.addEventListener("save-note", (event) => {
     });
   }
 });
-
-// search functionality
-searchForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const searchTerm = searchInput.value.toLowerCase();
-  getNotes().then((notesData) => {
-    const filteredNotes = notesData.filter((note) =>
-      note.title.toLowerCase().includes(searchTerm),
-    );
-    renderNotes(filteredNotes);
-  });
-});
-
-// clear search when empty
-searchInput.addEventListener("input", () => {
-  if (searchInput.value === "") {
-    getNotes().then(renderNotes);
-  }
-});
